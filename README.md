@@ -1,10 +1,6 @@
 # jmidi
 
----
-
 Client for controlling JACK with MIDI devices. Based on [jack_mixer]("https://github.com/jack-mixer/jack_mixer").
-
----
 
 ## Features
 
@@ -18,8 +14,6 @@ Client for controlling JACK with MIDI devices. Based on [jack_mixer]("https://gi
 - Granular lighting control
 - Layers
 - automatic config reloads
-
----
 
 ## Usage
 
