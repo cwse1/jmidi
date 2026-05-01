@@ -26,7 +26,7 @@ func (s *Sound) DecodeSound(sr beep.SampleRate) *beep.Buffer {
 		logs.Warn(err)
 		return nil
 	}
-	defer logs.CheckErr(f.Close())
+	defer f.Close()
 
 	var decoder beep.StreamSeekCloser
 
@@ -44,7 +44,7 @@ func (s *Sound) DecodeSound(sr beep.SampleRate) *beep.Buffer {
 			return nil
 		}
 	}
-	defer logs.CheckErr(decoder.Close())
+	defer decoder.Close()
 
 	resampler := beep.Resample(4, s.format.SampleRate, sr, decoder) // Resample audio file to match JACK server
 	buffer := beep.NewBuffer(beep.Format{

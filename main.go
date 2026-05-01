@@ -15,6 +15,6 @@ func main() {
 
 	// Initialize JACK client for each controller
 	for _, controller := range conf.Controllers {
-		jackclient.Init(&controller, lib)
+		jackclient.Run(&controller, lib)
 	}
 }

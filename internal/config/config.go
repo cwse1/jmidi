@@ -102,7 +102,7 @@ func getConf(path string) Config {
 	if err != nil {
 		logs.Fatal(fmt.Errorf("failed to open config file: %e", err))
 	}
-	defer logs.CheckErr(file.Close())
+	defer file.Close()
 
 	data, err := io.ReadAll(file) // Read config file
 	if err != nil {
@@ -129,10 +129,10 @@ func Read() Config {
 	if err != nil {
 		logs.Warn(fmt.Errorf("config file not found; creating: %e", err))
 
-		createConf(path)
+		createConf(cfg)
 	}
 
-	return getConf(path)
+	return getConf(cfg)
 }
 
 // ReadJMConfig reads the jack_mixer config file into a jackMixerConfig struct and returns it.

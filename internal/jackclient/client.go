@@ -152,8 +152,8 @@ func (client *Client) lightState(state byte) jack.MidiData {
 	return midiData
 }
 
-// Init Client passing associated controller and the global audio library.
-func Init(ctrl *config.Controller, lib *soundboard.Library) {
+// Run Client passing associated controller and the global audio library.
+func Run(ctrl *config.Controller, lib *soundboard.Library) {
 	controller = ctrl
 	library = lib
 
@@ -162,6 +162,7 @@ func Init(ctrl *config.Controller, lib *soundboard.Library) {
 
 	client := newClient().initState()
 	client.start()
+	// TODO: try to only set the lib sr once
 	lib.SampleRate = client.sr // Set sample rate of audio library
 
 	<-sig // Catch SIGTERM or SIGINT and gracefully handle shutting down
