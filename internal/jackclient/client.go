@@ -141,6 +141,7 @@ func (client *Client) stop() {
 	client.jackClient.Close()
 }
 
+// TODO: implement support for more states
 // Toggle lighting state
 func (client *Client) lightState(state byte) jack.MidiData {
 	midiData := jack.MidiData{}
@@ -162,8 +163,10 @@ func Run(ctrl *config.Controller, lib *soundboard.Library) {
 
 	client := newClient().initState()
 	client.start()
-	// TODO: try to only set the lib sr once
-	lib.SampleRate = client.sr // Set sample rate of audio library
+
+	if lib.SampleRate != client.sr {
+		lib.SampleRate = client.sr // Set sample rate of audio library
+	}
 
 	<-sig // Catch SIGTERM or SIGINT and gracefully handle shutting down
 	client.stop()
