@@ -21,7 +21,7 @@ func (client *Client) startProcess(nframes uint32) int {
 // Process callback run at shutdown; turns off all lights
 func (client *Client) stopProcess(nframes uint32) int {
 	if client.isStopping {
-		ret := client.lightState(0)
+		ret := lightsOffMsg
 
 		bufMidiRet := client.midiReturnPort.MidiClearBuffer(nframes)
 		client.midiReturnPort.MidiEventWrite(&ret, bufMidiRet)
@@ -33,9 +33,6 @@ func (client *Client) stopProcess(nframes uint32) int {
 
 // Main process callback; reads midi input data; returns lighting midi data; can send midi data to jack_mixer
 func (client *Client) mainProcess(nframes uint32) int {
-	out := jack.MidiData{}
-	ret := jack.MidiData{}
-
 	bufMidiIn := client.midiInPort.GetMidiEvents(nframes)
 	bufMidiRet := client.midiReturnPort.MidiClearBuffer(nframes)
 	bufMidiOut := client.midiOutPort.MidiClearBuffer(nframes)
@@ -50,6 +47,8 @@ func (client *Client) mainProcess(nframes uint32) int {
 			if pad, ok := controller.ControlPads[key]; ok {
 				switch pad.Function {
 				case "mute": // mute jack_mixer channel
+					out := jack.MidiData{}
+					ret := jack.MidiData{}
 					switch client.state[key] {
 					case 0:
 						client.state[key] = 1
@@ -62,10 +61,11 @@ func (client *Client) mainProcess(nframes uint32) int {
 					client.midiOutPort.MidiEventWrite(&out, bufMidiOut)
 					client.midiReturnPort.MidiEventWrite(&ret, bufMidiRet)
 				case "toggleLights": // toggles all lights
+					ret := jack.MidiData{}
 					switch client.state[key] {
 					case 0:
 						client.state[key] = 1
-						ret = client.lightState(0)
+						ret = lightsOffMsg
 					case 1:
 						client.state[key] = 0
 						ret = client.lightState(1)

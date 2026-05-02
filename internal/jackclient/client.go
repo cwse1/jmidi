@@ -17,8 +17,9 @@ import (
 )
 
 var (
-	controller *config.Controller
-	library    *soundboard.Library
+	controller   *config.Controller
+	library      *soundboard.Library
+	lightsOffMsg jack.MidiData
 )
 
 // Client is a JACK client with midi ports, an output port, state maps, beep.Mixer, and a pointer to its process callback.
@@ -119,6 +120,10 @@ func (client *Client) initState() *Client {
 				}
 			}
 		}
+	}
+
+	for key := range client.state {
+		lightsOffMsg.Buffer = append(lightsOffMsg.Buffer, 144, key, 0)
 	}
 
 	return client
